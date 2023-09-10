@@ -28,19 +28,25 @@ def hue_to_pitch(hue):
 
 
 def generate_sound_for_color(hue, saturation, brightness):
-    """
-    Generate a sound based on color attributes.
-    Here we are using hue to determine pitch, and brightness to determine volume (amplitude).
-    """
-    # Convert hue to pitch
-    pitch = hue_to_pitch(hue)
+    """Generate a sound sample based on the given color attributes."""
 
-    # Use brightness to control volume
-    volume = brightness
+    # Map the hue to a frequency between 200Hz and 600Hz
+    freq = 200 + hue * 400
 
-    # Generate a sine wave sound with given pitch and volume
-    sine_wave = Sine(pitch)
+    # Map the saturation to amplitude between 0.5 and 1.0
+    amplitude = 0.5 + saturation * 0.5
+
+    # Limit amplitude between 0 and 1
+    amplitude = max(0, min(amplitude, 1))
+
+    # Duration in milliseconds based on brightness
+    duration_ms = 500 + brightness * 500
+
+    sine_wave = Sine(freq)
+
     audio_sample = sine_wave.to_audio_segment(
-        duration=500, volume=volume)  # 500ms duration
+        duration=duration_ms,
+        volume=amplitude
+    )
 
     return audio_sample
