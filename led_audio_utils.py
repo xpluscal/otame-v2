@@ -45,8 +45,8 @@ def generate_sound_for_color(hue, saturation, brightness):
     sine_wave = Sine(freq)
 
     audio_sample = sine_wave.to_audio_segment(
-        duration=duration_ms,
-        volume=amplitude
+        duration=5000,
+        volume=-10.0
     )
 
     return audio_sample
