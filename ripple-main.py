@@ -1,3 +1,4 @@
+import pygame
 import opc
 import time
 import math
@@ -17,6 +18,15 @@ NOISE_FACTOR = 0.2  # Intensity of the noise for color variation
 
 # Create a client object
 client = opc.Client('localhost:7890')
+
+
+def custom_play(audio_segment):
+    pygame.mixer.init(frequency=audio_segment.frame_rate)
+    pygame.mixer.music.load(audio_segment.export(format="wav").read())
+    pygame.mixer.music.play()
+    while pygame.mixer.music.get_busy():
+        time.sleep(0.1)
+    pygame.mixer.quit()
 
 try:
     # Main animation loop
@@ -67,7 +77,7 @@ try:
         hue = color_shift
         saturation = 1  # Full saturation for now
         audio_sample = generate_sound_for_color(hue, saturation, brightness)
-        play(audio_sample)
+        custom_play(audio_sample)
 
         # Send pixels to Fadecandy
         client.put_pixels(pixels)
