@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "otame-v2"
+version = "0.1.0"
+description = ""
+authors = ["Calvin Hoenes <calvinhoenes@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = ">=3.9,<3.10.dev0"
+sounddevice = "^0.4.6"
+pydub = "^0.25.1"
+scipy = "^1.11.3"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
