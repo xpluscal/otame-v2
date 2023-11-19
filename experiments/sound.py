@@ -20,6 +20,8 @@ time.sleep(3)
 angle = 0  # Initialize angle
 angle_increment = math.pi / 200  # Adjust for speed of movement
 
+next_movement_time = 0
+last_time = time.time()
 
 counter = 0
 drone_update_interval = 100  # Adjust this for the drone's slower update rate
@@ -157,11 +159,13 @@ time.sleep(2)  # Short delay to ensure the SynthDef is registered
 
 drone = Synth('drone_synth', {'base_freq': 400, 'amp': 0.1, 'mod_rate': 0.1, 'mod_depth': 0.05})
 drone2 = Synth('drone_synth', {'base_freq': 200, 'amp': 0.1, 'mod_rate': 0.1, 'mod_depth': 0.05})
-drone3 = Synth('drone_synth', {'base_freq': 100, 'amp': 0.2, 'mod_rate': 0.1, 'mod_depth': 0.05})
+drone3 = Synth('drone_synth', {'base_freq': 100, 'amp': 0.1, 'mod_rate': 0.1, 'mod_depth': 0.05})
 bass_drone = Synth('bass_drone_synth', {'freq': 55, 'amp': 0.3, 'lfo_rate': 0.22, 'lfo_depth': 0.8})
 
 try:
     while True:
+
+        current_time = time.time()
 
         if counter % drone_update_interval == 0:
             mod_rate = random.uniform(0.05, 0.2)
@@ -183,13 +187,22 @@ try:
             bass_drone.set('lfo_rate', lfo_rate_val)
             bass_drone.set('lfo_depth', lfo_depth_val)
 
-        if counter % underwater_movement_update_interval == 0:
-            # Random pan value for stereo movement
-            pan_val = random.uniform(-1, 1)  # -1 is left, 1 is right
-            rate_val = random.uniform(0.5, 2)  # Rate of filter modulation
+        # Handle intermittent underwater movement
+        if current_time >= next_movement_time:
+            # Random pan value and rate for the next movement
+            pan_val = random.uniform(-1, 1)
+            rate_val = random.uniform(0.1, 0.5)
 
-            # Create the underwater movement sound
-            movement = Synth('underwater_movement', {'pan': pan_val, 'amp': 0.9, 'rate': rate_val})
+            # Create or update the underwater movement sound
+            if 'movement' in locals():
+                movement.free()  # Free the existing movement before creating a new one
+
+            movement = Synth('underwater_movement', {'pan': pan_val, 'amp': 0.4, 'rate': rate_val})
+            
+            # Calculate next movement time
+            next_movement_duration = random.uniform(2, 3)  # Duration of movement sound
+            next_wait_duration = random.uniform(6, 10)  # Duration of silence
+            next_movement_time = current_time + next_movement_duration + next_wait_duration
 
         # Increment the counter
         counter += 1
@@ -199,17 +212,22 @@ try:
 
         # Create a bubble sound with moving stereo position and varying volume
         # Example of creating a bubble sound with a specific amplitude
-        # bubble = Synth('bubble_synth', {'pan': pan_val, 'amp': 0.1, 'dur': dur_val})
+        bubble = Synth('bubble_synth', {'pan': pan_val, 'amp': 0.01, 'dur': dur_val})
 
 
         # Increment the angle for the next iteration
         angle += angle_increment
         if angle >= 2 * math.pi:
-            angle -= 2 * math.pi  # Reset angle after a full circle
+            angle -= 2 * math.pi  # Reset angle after a full 
+            
+        loop_duration = time.time() - last_time
+        time_to_sleep = max(0.01, 0.1 - loop_duration)
+        time.sleep(time_to_sleep)
+        last_time = time.time()
 
 
         # Wait before the next loop iteration
-        time.sleep(random.uniform(0.01, 0.1))  # Adjust for desired bubble frequency
+        # time.sleep(random.uniform(0.01, 0.1))  # Adjust for desired bubble frequency
 except KeyboardInterrupt:
     # Stop the synth and exit
     drone.free()
