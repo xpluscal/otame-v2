@@ -128,6 +128,21 @@ files = [
 ]
 
 [[package]]
+name = "sc3"
+version = "1.1.3a0"
+description = "SuperCollider library for Python"
+optional = false
+python-versions = ">=3.6"
+files = [
+    {file = "sc3-1.1.3a0-py3-none-any.whl", hash = "sha256:862bd00c5263e83ef03678be5d2945e977e8de4228c68e5dfa301ace96157a21"},
+    {file = "sc3-1.1.3a0.tar.gz", hash = "sha256:0d8e7d55e1f4a288bda7c35bf590496733c9f2c055b5dc345813d5e9a7413e92"},
+]
+
+[package.extras]
+midi = ["mido", "python-rtmidi"]
+midi-nrt = ["mido"]
+
+[[package]]
 name = "scipy"
 version = "1.11.3"
 description = "Fundamental algorithms for scientific computing in Python"
@@ -192,4 +207,4 @@ numpy = ["NumPy"]
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.9,<3.10.dev0"
-content-hash = "3cbd05edbf84b594fd44549f1c1d7221aa423a9742ae71f5696a286d76e95ae5"
+content-hash = "17405da519ed123318743d9a9a5ae1eff8b57591b5dbd4b8a3bcdc0677ccea77"
